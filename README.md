@@ -6,8 +6,8 @@ I have used plenty of LightTracker 1.1 433MHz open source code, as well as some 
 
 
 
-<img src="IMG_3695.jpg" width="600">
-<img src="IMG_3696.jpg" width="600">
-<img src="IMG_3698.jpg" width="600">
+<img src="images/IMG_3695.jpg" width="600">
+<img src="images/IMG_3696.jpg" width="600">
+<img src="images/IMG_3698.jpg" width="600">
 
 **Important :** 433 MHz may require an amateur radio license to operate if 433 MHz is not ISM band in your country. So check regulations before using it.
