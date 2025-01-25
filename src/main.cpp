@@ -10,7 +10,7 @@
  
  This example is made for Ebyte's E77 400 development board, and transmits LoRa APRS at the standerd
  433.775 mhz, which is used in the USA and most other countries. It reads the UBX from the Ublox 
- module over I2c and outputs  some of the info to the serial port. It uses LoRa APRS eMic encoding 
+ module over I2c and outputs  some of the info to the serial port. It uses LoRa APRS MicE encoding 
  to transmit location (RadioLib). The E77 module is interesting, because both a STM32WLE mcu and
  a SX1262 transciever are built into one chip, making the module very small and light. However
  the development board is not especially light. It weighs 9.4 grams as assembled. By removing some 
