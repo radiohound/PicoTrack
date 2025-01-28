@@ -26,7 +26,6 @@
 #include <SPI.h>
 #include <SubGhz.h>
 #include <Wire.h> //Needed for I2C to GPS
-#include <MicroNMEA.h> //http://librarymanager/All#MicroNMEA  - Not really using this anymore should remove
 #include "STM32RTC.h"
 #include "STM32LowPower.h"
 #include <RadioLib.h>
@@ -36,12 +35,8 @@
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS this is the newer library
 SFE_UBLOX_GNSS myGPS; // changed from SFE_UBLOX_GPS (the old library)
 
-// Not using MicroNMEA anymore - can remove that 
-char nmeaBuffer[100];
-char* status = "LoRa TX STM32WLE5";
-MicroNMEA nmea(nmeaBuffer, sizeof(nmeaBuffer));
+char* status = "LoRa PicoTrack";
 bool ublox_high_alt_mode_enabled = false;
-
 
 // no need to configure pins, signals are routed to the radio internally
 STM32WLx radio = new STM32WLx_Module();
@@ -211,8 +206,6 @@ void loop()
    Serial.print(" , Longitude (deg): ");
    Serial.print(longitude_mdeg);
 
-  
-
 
    long speed = myGPS.getGroundSpeed();
    Serial.print(F(" Speed: "));
@@ -276,20 +269,6 @@ void loop()
  }
  delay(500); // let printing complete prior to sleeping
  LowPower.deepSleep(115000); // with other delays and timing, this tx's approx every 2 min
-}
-
-// The below function and other NMEA related code should be removed, as its not being used
-// The code now uses UBX 
-
-//This function gets called from the SparkFun Ublox Arduino Library
-//As each NMEA character comes in you can specify what to do with it
-//Useful for passing to other libraries like tinyGPS, MicroNMEA, or even
-//a buffer, radio, etc.
-void SFE_UBLOX_GNSS::processNMEA(char incoming)
-{
- //Take the incoming char from the Ublox I2C port and pass it on to the MicroNMEA lib
- //for sentence cracking
- nmea.process(incoming);
 }
 
 

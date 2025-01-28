@@ -1,6 +1,6 @@
 # PicoTrack
 
-PicoTrack uses one of the smallest combined mcu/LoRa transmitter module that is currently available. Currently testing is being done with development boards (Ebyte's E77 dev board 400 mhz version, and Watterott's CAM-M8Q breakout board). In the future, a small, light board that holds these modules will be made. There is a lot of room for lightening this up. The two modules together weigh in at about 1.3 grams!
+PicoTrack uses one of the smallest combined mcu/LoRa transmitter modules that is currently available. Currently testing is being done with development boards ([Ebyte's E77 dev board 400 mhz](https://www.cdebyte.com/products/E77-400MBL-01) version, and [Watterott's CAM-M8Q breakout board](https://github.com/watterott/CAM-M8Q-Breakout)). In the future, a small, light board that holds these modules will be made. There is a lot of room for lightening this up. The two modules together weigh in at about 1.3 grams!
 
 I have used plenty of LightTracker 1.1 433MHz open source code, as well as some example code from different libraries. 
 
