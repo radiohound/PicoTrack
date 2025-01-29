@@ -36,7 +36,11 @@
 SFE_UBLOX_GNSS myGPS; // changed from SFE_UBLOX_GPS (the old library)
 
 char* status = "LoRa PicoTrack";
-bool ublox_high_alt_mode_enabled = false;
+bool ublox_high_alt_mode_enabled = false; // high altitude 50k meter mode
+long newHeight; // current height measurement
+long oldHeight; // previous height measurement
+int sleepTime; // controls loop time in milliseconds 
+bool falling = false;  // used to define state of falling
 
 // no need to configure pins, signals are routed to the radio internally
 STM32WLx radio = new STM32WLx_Module();
@@ -223,6 +227,8 @@ void loop()
    Serial.print(F(" Alt: "));
    Serial.print(altitude/1000);
    Serial.print(F(" (m)"));
+   newHeight = altitude/1000;
+
 
 
    long altitudeMSL = myGPS.getAltitudeMSL();
@@ -267,8 +273,29 @@ void loop()
    Serial.print("Num. satellites: ");
    Serial.println(myGPS.getSIV());
  }
+
+ if (newHeight + 10 < oldHeight) // check to see if we have fallen more than 30 feet since last reading
+ {
+    sleepTime = 10000;  // if descending rapidly tx every 10 seconds (likely 15 seconds with other delays)
+    falling = true;
+    Serial.println("falling");
+ }
+ else
+ {
+    sleepTime = 115000; // if not descending rapidly, tx every 120 seconds
+    falling = false;
+    Serial.println("NOT falling");
+ } 
+
+ oldHeight = newHeight;
  delay(500); // let printing complete prior to sleeping
- LowPower.deepSleep(115000); // with other delays and timing, this tx's approx every 2 min
+ LowPower.deepSleep(sleepTime); // deepSleep for duration specified by rising or falling (above) 
+
+ /*
+ https://github.com/stm32duino/STM32LowPower
+ deep sleep mode: medium latency (ms range), clocks are gated to reduced. Memories and voltage supplies 
+ are retained. If supported, Peripherals wake-up is possible (UART, I2C ...).
+ */
 }
 
 
