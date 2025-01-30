@@ -157,7 +157,7 @@ void setupLoRaRadio()  {
 void setup()
 {
  Serial.begin(115200);
- Serial.println("SparkFun Ublox Example");
+ Serial.println("Setup UBlox i2c gps settings");
 
 
  Wire.begin();
@@ -286,7 +286,9 @@ void loop()
     falling = false;
     Serial.println("NOT falling");
  } 
-
+ Serial.print(oldHeight);
+ Serial.print(", ");
+ Serial.println(newHeight);
  oldHeight = newHeight;
  delay(500); // let printing complete prior to sleeping
  LowPower.deepSleep(sleepTime); // deepSleep for duration specified by rising or falling (above) 
