@@ -4,6 +4,8 @@ PicoTrack uses one of the smallest combined mcu/LoRa transmitter modules that is
 
 I have used plenty of LightTracker 1.1 433MHz open source code, as well as some example code from different libraries. 
 
+( Update: I was able to port the code from LightTracker 1.1 433MHz . That code is located here: https://github.com/radiohound/Pico_Lora_APRS )
+
 
 
 <img src="images/IMG_3695.jpg" width="600">
