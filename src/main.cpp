@@ -150,6 +150,11 @@ void setupLoRaRadio()  {
    while (true) { delay(10); }
  }
 
+ // set over current protection limit to 140 mA (accepted range is 45 - 240 mA) 
+ if (radio.setCurrentLimit(140) == RADIOLIB_ERR_INVALID_CURRENT_LIMIT) {
+  Serial.println(F("Selected current limit is invalid for this module!"));
+  while (true);
+ }  
 
 }
 
