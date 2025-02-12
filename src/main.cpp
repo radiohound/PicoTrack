@@ -35,7 +35,7 @@
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS this is the newer library
 SFE_UBLOX_GNSS myGPS; // changed from SFE_UBLOX_GPS (the old library)
 
-char* status = "LoRa PicoTrack";
+char status[] = "LoRa PicoTrack";
 bool ublox_high_alt_mode_enabled = false; // high altitude 50k meter mode
 long newHeight; // current height measurement
 long oldHeight; // previous height measurement
