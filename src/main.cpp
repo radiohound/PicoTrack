@@ -47,6 +47,7 @@ long newHeight; // current height measurement
 long oldHeight; // previous height measurement
 int sleepTime; // controls loop time in milliseconds 
 bool falling = false;  // used to define state of falling
+char myCall[] = "K6ATV-7";
 
 // no need to configure pins, signals are routed to the radio internally
 STM32WLx radio = new STM32WLx_Module();
@@ -302,6 +303,12 @@ void loop()
    Serial.print("No Fix - ");
    Serial.print("Num. satellites: ");
    Serial.println(myGPS.getSIV());
+   byte SIV = myGPS.getSIV();
+   char bits[20]= "";
+   String msg = ":K6ATV-7  :GPS=" + String(myGPS.getSIV());
+   strcat( bits, msg.c_str() );
+   aprs.sendFrame(myCall, 1, bits);
+   delay(500);
  }
 
  if (newHeight + 10 < oldHeight) // check to see if we have fallen more than 30 feet since last reading
@@ -312,7 +319,7 @@ void loop()
  }
  else
  {
-    sleepTime = 115000; // if not descending rapidly, tx every 120 seconds
+    sleepTime = 27000; // if not descending rapidly, tx every 120 seconds
     falling = false;
     Serial.println("NOT falling");
  } 
