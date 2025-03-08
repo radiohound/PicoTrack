@@ -23,17 +23,23 @@
  (There may also be other pins that will work)
  Open the (usb) serial monitor at 115200 baud to see the output
 */
+#include "stm32yyxx_ll_adc.h" // analog read for stm32
 #include <SPI.h>
 #include <SubGhz.h>
 #include <Wire.h> //Needed for I2C to GPS
 #include "STM32RTC.h"
 #include "STM32LowPower.h"
 #include <RadioLib.h>
-
-
 //#include "SparkFun_Ublox_Arduino_Library.h" // this is older library and is no longer supported
 #include <SparkFun_u-blox_GNSS_Arduino_Library.h> //http://librarymanager/All#SparkFun_u-blox_GNSS this is the newer library
 SFE_UBLOX_GNSS myGPS; // changed from SFE_UBLOX_GPS (the old library)
+
+/* Analog read cal Values available in datasheet */
+#define CALX_TEMP 25
+
+/* Analog read resolution */
+#define LL_ADC_RESOLUTION LL_ADC_RESOLUTION_12B
+#define ADC_RANGE 4096
 
 char status[] = "LoRa PicoTrack";
 bool ublox_high_alt_mode_enabled = false; // high altitude 50k meter mode
@@ -64,6 +70,15 @@ static const Module::RfSwitchMode_t rfswitch_table[] = {
  END_OF_MODE_TABLE,
 };
 
+static int32_t readVref()
+{
+  return (__LL_ADC_CALC_VREFANALOG_VOLTAGE(analogRead(AVREF), LL_ADC_RESOLUTION));
+}
+
+static int32_t readTempSensor(int32_t VRef)
+{
+  return (__LL_ADC_CALC_TEMPERATURE(VRef, analogRead(ATEMP), LL_ADC_RESOLUTION));
+}
 
 void setupUBloxDynamicModel() {
    // each time we power the GPS on, we will have to reset this parameter (I don't think the backup battery will hold this setting)
@@ -163,7 +178,7 @@ void setup()
 {
  Serial.begin(115200);
  Serial.println("Setup UBlox i2c gps settings");
-
+ analogReadResolution(12);
 
  Wire.begin();
  Wire.setClock(400000);
@@ -246,6 +261,10 @@ void loop()
    Serial.print(F(" SIV: "));
    Serial.print(SIV);
 
+   // get battery voltage and rough temperature info
+   int32_t VRef = readVref();
+   int32_t temp = readTempSensor(VRef);
+
 
    //Serial.println();
    Serial.print(" Date: ");
@@ -260,7 +279,13 @@ void loop()
    Serial.print(myGPS.getMinute());
    Serial.print(":");
    Serial.println(myGPS.getSecond());
-   
+   String msg;
+   char status[60] = "";
+   msg = String("LoRa APRS ") + (VRef/1000.0) + String("v ") + SIV + String(" sats ") + temp + String("C");
+
+
+   strcat( status, msg.c_str() ); // convert msg into a format the radioLib aprs will like
+
    int state = aprs.sendMicE((latitude_mdeg), (longitude_mdeg), (heading / 1000000), (speed / 514.4), RADIOLIB_APRS_MIC_E_TYPE_EN_ROUTE, NULL, 0, NULL, status, (myGPS.getAltitudeMSL() / 1000));
    delay(2000);
 
